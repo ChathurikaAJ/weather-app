@@ -1,9 +1,7 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import axios from 'axios'
 import { useState } from 'react'
-import { BsSearch } from 'react-icons/bs'
-import background from '../assets/images/background.jpg'
+import Search from '@/components/Search'
 
 
 export default function Home() {
@@ -34,24 +32,13 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-     <div className='absolute'>
 
-  
-   
+      <Search getWeather={getWeather}/>
+
       
-      <div className='absolute flex justify-between items-center max-w-[500px] w-full m-auto pt-4 px-4 bg-red z-50'>
-        <form>
-          <div>
-            <input type="text" placeholder="Search city" />
-          </div>
-          <button onClick={getWeather}><BsSearch /></button>
-        </form>
-      </div>
+      
 
-     
-      </div>
-
-      {/* <div className='absolute top-0 left-0 right-0 bottom-0 bg-black/40 z-[1]' /> */}
+    
 
 
     </div>
