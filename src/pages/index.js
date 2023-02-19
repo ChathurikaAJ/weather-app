@@ -1,8 +1,10 @@
 import Head from 'next/head'
 import axios from 'axios'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Search from '@/components/Search'
 import Weather from '@/components/Weather'
+import Unit from '@/components/Unit'
+// import { useStateWithCallbackLazy } from 'use-state-with-callback';
 
 
 export default function Home() {
@@ -10,29 +12,37 @@ export default function Home() {
   const [weatherData, setWeatherData] = useState({})
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [unit, setUnit] = useState('metric')
+  const [city, setCity] = useState('');
 
 
 
   const getWeather = (event) => {
-    event.preventDefault()
-    const city = event.target.cityName.value
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`
+    if(event){
+      event.preventDefault()
+    }
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${unit}&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`
     setLoading(true)
 
     axios.get(url)
       .then((response) => {
         setWeatherData(response.data)
-        console.log(response.data)
         setErrorMessage('')
       })
       .catch((error => {
         setErrorMessage('Please enter valid city name')
+        console.log(error);
       }))
-
-
     setLoading(false)
   }
 
+  useEffect((event)=>{
+    if(weatherData.main){
+      getWeather(event)
+    }
+  },[unit])
+
+  
   return (
     <div>
       <Head>
@@ -42,11 +52,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.png" />
       </Head>
 
-      <Search getWeather={getWeather} />
+      <Search getWeather={getWeather} setCity={setCity}/>
+
+      {weatherData.main  && <Unit setUnit={setUnit} getWeather={getWeather} />}
 
       {loading && <p>Loading...</p>}
 
-      {!errorMessage && <Weather weatherData={weatherData} />}
+      {!errorMessage && weatherData.main && <Weather weatherData={weatherData} unit={unit} />}
 
       {errorMessage && <p className='text-l text-red-600 text-center mt-10'>{errorMessage}</p>}
 
