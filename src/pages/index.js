@@ -7,26 +7,30 @@ import Weather from '@/components/Weather'
 
 export default function Home() {
 
-  const [city, setCity] = useState('')
   const [weatherData, setWeatherData] = useState({})
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`
+
 
   const getWeather = (event) => {
     event.preventDefault()
-    setCity(event.target.cityName.value)
-    // setLoading(true)
-    console.log(url);
+    const city = event.target.cityName.value
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`
+    setLoading(true)
+
     axios.get(url)
       .then((response) => {
         setWeatherData(response.data)
         console.log(response.data)
+        setErrorMessage('')
       })
-      setCity('')
-      
-    // setLoading(true)
+      .catch((error => {
+        setErrorMessage('Please enter valid city name')
+      }))
+
+
+    setLoading(false)
   }
 
   return (
@@ -38,9 +42,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.png" />
       </Head>
 
-      <Search getWeather={getWeather}/>
+      <Search getWeather={getWeather} />
 
-      <Weather weatherData={weatherData}/>
+      {loading && <p>Loading...</p>}
+
+      {!errorMessage && <Weather weatherData={weatherData} />}
+
+      {errorMessage && <p className='text-l text-red-600 text-center mt-10'>{errorMessage}</p>}
 
     </div>
   )
