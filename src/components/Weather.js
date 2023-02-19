@@ -4,12 +4,15 @@ import { useEffect, useState } from "react"
 const Weather = ({ weatherData, unit }) => {
 
   const [type, setType] = useState('C')
+  const [wind, setWind] = useState('KPH')
 
   useEffect(()=>{
     if(unit==='metric'){
       setType('C')
+      setWind('KPH')
     } else {
       setType('F')
+      setWind('MPH')
     }
   })
 
@@ -41,7 +44,7 @@ const Weather = ({ weatherData, unit }) => {
             <p className='text-xl'>Humidity</p>
           </div>
           <div>
-            <p className='font-bold text-2xl'>{weatherData.wind.speed.toFixed(0)} MPH</p>
+            <p className='font-bold text-2xl'>{weatherData.wind.speed.toFixed(0)} {wind}</p>
             <p className='text-xl'>Winds</p>
           </div>
         </div>

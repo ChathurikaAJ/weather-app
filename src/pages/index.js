@@ -56,11 +56,11 @@ export default function Home() {
 
       {weatherData.main  && <Unit setUnit={setUnit} getWeather={getWeather} />}
 
-      {loading && <p>Loading...</p>}
+      {loading && <p className='text-center text-white text-xl'>Loading...</p>}
 
       {!errorMessage && weatherData.main && <Weather weatherData={weatherData} unit={unit} />}
 
-      {errorMessage && <p className='text-l text-red-600 text-center mt-10'>{errorMessage}</p>}
+      {errorMessage && <p className='text-xl text-white text-center mt-10 bg-orange-500 p-4'>{errorMessage}</p>}
 
     </div>
   )
